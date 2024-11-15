@@ -1,6 +1,6 @@
 import { currentUser, redirectToSignIn } from "@clerk/nextjs/server";
 import { db } from "./db";
-import { profile } from "console";
+
 export const initialProfile = async () => {
     try {
         const user = await currentUser();

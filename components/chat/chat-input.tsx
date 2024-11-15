@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation'
 
 interface ChatInputProps {
   apiUrl: string
-  query: Record<string, any>
+  query: Record<string, string | number | boolean> // Thay thế any bằng kiểu cụ thể
   name: string
   type: 'conversation' | 'channel'
 }
@@ -49,7 +49,7 @@ export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
       form.reset()
       router.refresh()
     } catch (error) {
-      console.log(error)
+      console.error('Error submitting message:', error)
     }
   }
 
@@ -58,29 +58,29 @@ export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
-          name='content'
+          name="content"
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <div className='relative p-4 pb-6'>
+                <div className="relative p-4 pb-6">
                   <button
-                    type='button'
+                    type="button"
                     onClick={() => onOpen('messageFile', { apiUrl, query })}
-                    className='absolute top-7 left-8 h-[24px] w-[24px] bg-zinc-500 dark:bg-zinc-400 hover:bg-zinc-600 dark:hover:bg-zinc-300 transition rounded-full p-1 flex items-center justify-center'
+                    className="absolute top-7 left-8 h-[24px] w-[24px] bg-zinc-500 dark:bg-zinc-400 hover:bg-zinc-600 dark:hover:bg-zinc-300 transition rounded-full p-1 flex items-center justify-center"
                   >
-                    <Plus className='text-white dark:text-[#313338]' />
+                    <Plus className="text-white dark:text-[#313338]" />
                   </button>
                   <Input
-                    autoComplete='off'
+                    autoComplete="off"
                     disabled={isLoading}
-                    className='px-14 py-6 bg-zinc-300/80 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-800 dark:text-zinc-200'
+                    className="px-14 py-6 bg-zinc-300/80 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-800 dark:text-zinc-200"
                     placeholder={`Message ${
                       type === 'conversation' ? name : '#' + name
                     }`}
                     {...field}
                     onChange={field.onChange}
                   />
-                  <div className='absolute top-7 right-8'>
+                  <div className="absolute top-7 right-8">
                     <EmojiPicker
                       onChange={(emoji: string) =>
                         field.onChange(`${field.value} ${emoji}`)
