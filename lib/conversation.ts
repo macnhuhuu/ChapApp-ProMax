@@ -1,9 +1,10 @@
 import { db } from '@/lib/db'
+import { Conversation } from '@prisma/client' // Nhập kiểu từ Prisma
 
 export const getOrCreateConversation = async (
   memberOneId: string,
   memberTwoId: string
-) => {
+): Promise<Conversation | null> => { // Đảm bảo kiểu trả về là Conversation hoặc null
   let conversation =
     (await findConversation(memberOneId, memberTwoId)) ||
     (await findConversation(memberTwoId, memberOneId))
@@ -15,7 +16,10 @@ export const getOrCreateConversation = async (
   return conversation
 }
 
-const findConversation = async (memberOneId: string, memberTwoId: string) => {
+const findConversation = async (
+  memberOneId: string,
+  memberTwoId: string
+): Promise<Conversation | null> => { // Đảm bảo kiểu trả về là Conversation hoặc null
   try {
     return await db.conversation.findFirst({
       where: {
@@ -35,6 +39,7 @@ const findConversation = async (memberOneId: string, memberTwoId: string) => {
       },
     })
   } catch (error) {
+    console.error(error)
     return null
   }
 }
@@ -42,7 +47,7 @@ const findConversation = async (memberOneId: string, memberTwoId: string) => {
 const createNewConversation = async (
   memberOneId: string,
   memberTwoId: string
-) => {
+): Promise<Conversation | null> => { // Đảm bảo kiểu trả về là Conversation hoặc null
   try {
     return await db.conversation.create({
       data: {
@@ -63,6 +68,7 @@ const createNewConversation = async (
       },
     })
   } catch (error) {
+    console.error(error)
     return null
   }
 }

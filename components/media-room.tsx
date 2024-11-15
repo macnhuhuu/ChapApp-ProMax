@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { LiveKitRoom, VideoConference } from '@livekit/components-react'
 import '@livekit/components-styles'
-import { Channel } from '@prisma/client'
 import { useUser } from '@clerk/nextjs'
 import { Loader2 } from 'lucide-react'
 
@@ -15,9 +14,10 @@ interface MediaRoomProps {
 
 export const MediaRoom = ({ chatId, video, audio }: MediaRoomProps) => {
   const { user } = useUser()
-  const [token, setToken] = useState('')
+  const [token, setToken] = useState<string>('') // Đảm bảo xác định kiểu dữ liệu cho token
 
   useEffect(() => {
+    // Kiểm tra user và các thông tin cần thiết
     if (!user?.firstName || !user?.lastName) return
 
     const name = `${user.firstName} ${user.lastName}`
@@ -25,16 +25,20 @@ export const MediaRoom = ({ chatId, video, audio }: MediaRoomProps) => {
     const fetchToken = async () => {
       try {
         const resp = await fetch(`/api/livekit?room=${chatId}&username=${name}`)
+        if (!resp.ok) {
+          throw new Error('Failed to fetch LiveKit token')
+        }
         const data = await resp.json()
         setToken(data.token)
       } catch (error) {
-        console.log(error)
+        console.log('Error fetching LiveKit token:', error)
       }
     }
 
     fetchToken()
   }, [user?.firstName, user?.lastName, chatId])
 
+  // Kiểm tra nếu token vẫn chưa được lấy
   if (token === '') {
     return (
       <div className='flex flex-col flex-1 justify-center items-center'>
@@ -42,6 +46,11 @@ export const MediaRoom = ({ chatId, video, audio }: MediaRoomProps) => {
         <p className='text-xs text-zinc-500 dark:text-zinc-400'>Loading...</p>
       </div>
     )
+  }
+
+  // Kiểm tra nếu URL môi trường của LiveKit không có
+  if (!process.env.NEXT_PUBLIC_LIVEKIT_URL) {
+    return <div>Error: LiveKit URL is not configured.</div>
   }
 
   return (

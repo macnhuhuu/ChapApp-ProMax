@@ -10,10 +10,8 @@ import { Member, MemberRole, Profile } from '@prisma/client'
 import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash2 } from 'lucide-react'
 
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, KeyboardEvent } from 'react'
 import { useRouter, useParams } from 'next/navigation'
-
-
 
 import { cn } from '@/lib/utils'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
@@ -35,7 +33,7 @@ interface ChatItemProps {
   currentMember: Member
   isUpdated: boolean
   socketUrl: string
-  socketQuery: Record<string, string>
+  socketQuery: Record<string, string> // Thay thế any
 }
 
 const roleIconMap = {
@@ -99,17 +97,21 @@ export const ChatItem = ({
   }
 
   useEffect(() => {
-    const handleKeyDown = (event: any) => {
-      if (event.key === 'Escape' || event.keyCode === 27) {
-        setIsEditing(false)
+    const handleKeyDown: EventListener = (event) => {  // Dùng EventListener
+      const keyboardEvent = event as unknown as KeyboardEvent;   // Ép kiểu event thành KeyboardEvent
+      if (keyboardEvent.key === 'Escape' || keyboardEvent.keyCode === 27) {
+        setIsEditing(false);
       }
     }
-
-    window.addEventListener('keydown', handleKeyDown)
-
-    return () => window.removeEventListener('keyDown', handleKeyDown)
-  }, [])
-
+  
+    window.addEventListener('keydown', handleKeyDown);
+  
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);  // Xóa event
+    };
+  }, []);
+  
+  
   useEffect(() => {
     form.reset({
       content: content,
