@@ -18,7 +18,7 @@ const RoleIconMap = {
   [MemberRole.ADMIN]: <ShieldCheck className='h-4 w-4 text-rose-500' />,
 }
 
-export default function ServerMember({ member, server }: ServerMemberProps) {
+export default function ServerMember({ member }: ServerMemberProps) {
   const router = useRouter()
   const params = useParams()
 
