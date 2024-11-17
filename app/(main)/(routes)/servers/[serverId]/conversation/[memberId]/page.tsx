@@ -1,4 +1,3 @@
-
 import { ChatHeader } from '@/components/chat/chat-header'
 import { ChatInput } from '@/components/chat/chat-input'
 import { ChatMessages } from '@/components/chat/chat-messages'
@@ -6,7 +5,8 @@ import { MediaRoom } from '@/components/media-room'
 import { getOrCreateConversation } from '@/lib/conversation'
 import { currentProfile } from '@/lib/current-profile'
 import { db } from '@/lib/db'
-import { auth } from '@clerk/nextjs/server'
+import { redirectToSignIn } from '@clerk/nextjs'
+
 import { redirect } from 'next/navigation'
 
 interface MemberIdPageProps {
@@ -23,7 +23,7 @@ const MemberIdPage = async ({ params, searchParams }: MemberIdPageProps) => {
   const profile = await currentProfile()
 
   if (!profile) {
-    return auth().redirectToSignIn()
+    return redirectToSignIn()
   }
 
   const currentMember = await db.member.findFirst({

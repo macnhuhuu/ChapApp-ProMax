@@ -1,38 +1,31 @@
-import { currentUser, redirectToSignIn } from "@clerk/nextjs/server";
-import { db } from "./db";
+import { currentUser, redirectToSignIn } from '@clerk/nextjs/server'
+import { db } from '@/lib/db'
 
 export const initialProfile = async () => {
-    try {
-        const user = await currentUser();
-        if (!user) {
-            redirectToSignIn(); // Gọi hàm redirect
-            return; // Dừng hàm sau khi chuyển hướng
-        }
+  const user = await currentUser()
 
-        const profile = await db.profile.findUnique({
-            where: {
-                userId: user.id
-            }
-        });
+  if (!user) {
+    return redirectToSignIn()
+  }
 
-        if (profile) {
-            return profile;
-        }
+  const profile = await db.profile.findUnique({
+    where: {
+      userId: user.id,
+    },
+  })
 
-        const newProfile = await db.profile.create({
-            data: {
-                userId: user.id,
-                name: `${user.firstName} ${user.lastName}`,
-                imageUrl: user.imageUrl,
-                email: user.emailAddresses[0].emailAddress
-            }
-        });
+  if (profile) {
+    return profile
+  }
 
-        return newProfile;
+  const newProfile = await db.profile.create({
+    data: {
+      userId: user.id,
+      name: `${user.firstName} ${user.lastName}`,
+      imageUrl: user.imageUrl,
+      email: user.emailAddresses[0].emailAddress,
+    },
+  })
 
-    } catch (error) {
-        console.error("Error in initialProfile:", error);
-        // Có thể trả về giá trị mặc định hoặc throw lỗi
-        throw error;
-    }
-};
+  return newProfile
+}

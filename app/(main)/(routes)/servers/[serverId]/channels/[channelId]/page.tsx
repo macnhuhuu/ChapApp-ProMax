@@ -5,7 +5,8 @@ import { ChatMessages } from '@/components/chat/chat-messages'
 import { MediaRoom } from '@/components/media-room'
 import { currentProfile } from '@/lib/current-profile'
 import { db } from '@/lib/db'
-import { auth } from '@clerk/nextjs/server'
+import { redirectToSignIn } from '@clerk/nextjs'
+
 import { ChannelType } from '@prisma/client'
 import { redirect } from 'next/navigation'
 
@@ -20,7 +21,7 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
   const profile = await currentProfile()
 
   if (!profile) {
-    return auth().redirectToSignIn()
+    return redirectToSignIn()
   }
 
   const channel = await db.channel.findUnique({
