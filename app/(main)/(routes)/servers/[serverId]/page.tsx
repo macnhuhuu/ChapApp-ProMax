@@ -1,6 +1,7 @@
 import { currentProfile } from '@/lib/current-profile'
 import { db } from '@/lib/db'
-import { auth } from '@clerk/nextjs/server'
+import { redirectToSignIn } from '@clerk/nextjs'
+
 import { redirect } from 'next/navigation'
 
 interface ServerIdPageProps {
@@ -13,7 +14,7 @@ const ServerIdPage = async ({ params }: ServerIdPageProps) => {
   const profile = await currentProfile()
 
   if (!profile) {
-    return auth().redirectToSignIn()
+    return redirectToSignIn()
   }
 
   // Truy vấn thông tin server và kênh có tên "General"
