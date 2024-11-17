@@ -30,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <ClerkProvider afterSignOutUrl={'/'}>
+    <ClerkProvider afterSignUpUrl={'/'}>
       <html lang='en' suppressHydrationWarning>
         <body className={cn(font.className, 'bg-zinc-200 dark:bg-[#313338]')}>
           <ThemeProvider
