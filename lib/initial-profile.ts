@@ -5,7 +5,8 @@ export const initialProfile = async () => {
     try {
         const user = await currentUser();
         if (!user) {
-            return redirectToSignIn(); // Gọi hàm redirect
+            redirectToSignIn(); // Gọi hàm redirect
+            return; // Dừng hàm sau khi chuyển hướng
         }
 
         const profile = await db.profile.findUnique({
@@ -31,6 +32,7 @@ export const initialProfile = async () => {
 
     } catch (error) {
         console.error("Error in initialProfile:", error);
-        // Bạn có thể trả về một giá trị mặc định hoặc throw error
+        // Có thể trả về giá trị mặc định hoặc throw lỗi
+        throw error;
     }
 };
