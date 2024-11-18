@@ -17,7 +17,7 @@ const ServerIdPage = async ({ params }: ServerIdPageProps) => {
     return redirectToSignIn()
   }
 
-  // Truy vấn thông tin server và kênh có tên "General"
+ 
   const server = await db.server.findUnique({
     where: {
       id: params.serverId,
@@ -47,7 +47,7 @@ const ServerIdPage = async ({ params }: ServerIdPageProps) => {
   const initialChannel = server.channels[0]
 
   // Kiểm tra tên kênh, chỉ redirect nếu kênh "General" tồn tại
-  if (initialChannel.name.toLowerCase() === 'general') {
+  if (initialChannel.name.toLowerCase() === 'General') {
     return redirect(`/servers/${params.serverId}/channels/${initialChannel.id}`)
   }
 

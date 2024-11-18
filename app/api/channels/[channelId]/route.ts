@@ -25,7 +25,7 @@ export async function DELETE(
       return new NextResponse('Channel ID Missing', { status: 400 })
     }
 
-    // Kiểm tra nếu kênh là "general" hoặc "General"
+
     const server = await db.server.update({
       where: {
         id: serverId,
@@ -43,7 +43,7 @@ export async function DELETE(
           delete: {
             id: params.channelId,
             name: {
-              not: 'general', // Đảm bảo không phải 'general'
+              not: 'General', // Đảm bảo không phải 'general'
             },
           },
         },
@@ -81,7 +81,7 @@ export async function PATCH(
     }
 
     // Kiểm tra tên kênh không phải là "general" hoặc "General"
-    if (name.toLowerCase() === 'general') {
+    if (name.toLowerCase() === 'General') {
       return new NextResponse("Name Cannot Be 'General'", { status: 400 })
     }
 
@@ -103,7 +103,7 @@ export async function PATCH(
             where: {
               id: params.channelId,
               name: {
-                not: 'general', // Đảm bảo không phải 'general'
+                not: 'General',
               },
             },
             data: {
